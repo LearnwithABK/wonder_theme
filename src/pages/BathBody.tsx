@@ -16,7 +16,7 @@ const products = [
   { name: 'Bath Brush', img: 'https://via.placeholder.com/160x220?text=Bath+Brush' },
   { name: 'Bath Salt Bar', img: 'https://via.placeholder.com/160x220?text=Bath+Salt+Bar' },
   { name: 'Bath Powder', img: 'https://via.placeholder.com/160x220?text=Bath+Powder' },
-  { name: 'Bath Sheet', img: 'https://via.placeholder.com/160x220?text=Bath+Sheet' },
+  { name: 'Bath Sheet', img: 'https://via.placeholder.com/160x220?text=Bath+Sheet' }, 
 ];
 
 const BathBody = () => (
