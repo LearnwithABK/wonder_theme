@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import aboutImg1 from './public/Assist/about1.jpg'; // Replace with your image path
 import aboutImg2 from './public/Assist/about2.jpg'; // Replace with your image path
 import CategoryShowcase from './pages/CategoryShowcase';
+import Footer from './components/Footer';
 
 const HERO_VIDEO = 'https://www.w3schools.com/howto/rain.mp4'; // Placeholder video, replace with your own
 
@@ -535,44 +536,6 @@ const ShowcaseSection = () => (
   </section>
 );
 
-const Header = ({ onMenu, onShop, onBestseller, onSale, onCountryClick, country, onSearchClick, onCartClick, onProfileClick, isNavbarOnWhite }: { onMenu: () => void; onShop: () => void; onBestseller: () => void; onSale: () => void; onCountryClick: () => void; country: typeof countryList[0]; onSearchClick: () => void; onCartClick: () => void; onProfileClick: () => void; isNavbarOnWhite: boolean }) => (
-  <header className="top-0 left-0 w-full z-50 flex items-center justify-between px-6 md:px-12 h-16 bg-transparent">
-    {/* Left: Hamburger and nav */}
-    <div className="flex items-center gap-6">
-      <button className={isNavbarOnWhite ? 'p-2 text-black' : 'p-2 text-white'} onClick={onMenu} aria-label="Open sidebar"><Menu size={28} strokeWidth={2} /></button>
-      <nav className={isNavbarOnWhite ? 'flex items-center gap-6 text-base font-medium ml-2 text-black' : 'flex items-center gap-6 text-base font-medium ml-2 text-white'}>
-        <a href="#" className="relative group" onClick={e => { e.preventDefault(); onShop(); }}>
-          Shop
-          <span className={isNavbarOnWhite ? "absolute left-0 -bottom-1 w-full h-0.5 bg-black scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left" : "absolute left-0 -bottom-1 w-full h-0.5 bg-white scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"} />
-        </a>
-        <a href="#" className="relative group" onClick={e => { e.preventDefault(); onBestseller(); }}>
-          Bestseller
-          <span className={isNavbarOnWhite ? "absolute left-0 -bottom-1 w-full h-0.5 bg-black scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left" : "absolute left-0 -bottom-1 w-full h-0.5 bg-white scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"} />
-        </a>
-        <a href="#" className="relative group" onClick={e => { e.preventDefault(); onSale(); }}>
-          Sale
-          <span className={isNavbarOnWhite ? "absolute left-0 -bottom-1 w-full h-0.5 bg-black scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left" : "absolute left-0 -bottom-1 w-full h-0.5 bg-white scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"} />
-        </a>
-      </nav>
-    </div>
-    {/* Right: icons and country */}
-    <div className={isNavbarOnWhite ? 'flex items-center gap-4 md:gap-6 text-black' : 'flex items-center gap-4 md:gap-6 text-white'}>
-      <button
-        className="flex items-center gap-1 text-sm p-2 rounded hover:bg-black/5 transition"
-        onClick={onCountryClick}
-        aria-label="Select country"
-      >
-        <span role="img" aria-label={country.name + ' Flag'}>{country.flag}</span>
-        <span>{country.currency}</span>
-        <span className="text-xs">▼</span>
-      </button>
-      <button className="p-2" aria-label="Search" onClick={onSearchClick}><Search size={22} strokeWidth={2} /></button>
-      <button className="p-2" aria-label="User" onClick={onProfileClick}><User size={22} strokeWidth={2} /></button>
-      <button className="p-2" aria-label="Cart" onClick={onCartClick}><ShoppingBag size={22} strokeWidth={2} /></button>
-    </div>
-  </header>
-);
-
 const Hero = () => (
   <section className="relative flex items-center justify-center min-h-screen w-full overflow-hidden">
     {/* Video background */}
@@ -604,10 +567,13 @@ const Hero = () => (
 );
 
 // In Home, manage bar visibility and margin for header
-const Home = () => {
+interface HomeProps {
+  setBarVisible?: (v: boolean) => void;
+}
+const Home: React.FC<HomeProps> = ({ setBarVisible }) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [openSection, setOpenSection] = useState<'shop' | 'bestseller' | null>(null);
-  const [barVisible, setBarVisible] = useState(true);
+  const [localBarVisible, setLocalBarVisible] = useState(true);
   const [countrySidebarOpen, setCountrySidebarOpen] = useState(false);
   const [selectedCountry, setSelectedCountry] = useState(countryList[0]);
   const [searchSidebarOpen, setSearchSidebarOpen] = useState(false);
@@ -669,6 +635,10 @@ const Home = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  useEffect(() => {
+    if (setBarVisible) setBarVisible(localBarVisible);
+  }, [localBarVisible, setBarVisible]);
+
   // Handlers for header links
   const handleShop = () => {
     setSidebarOpen(true);
@@ -713,28 +683,18 @@ const Home = () => {
 
   return (
     <div className="relative min-h-screen w-full pt-0">
-      {barVisible && <TopSlideTag onClose={() => setBarVisible(false)} />}
-      <div className={barVisible ? 'lg:mt-[2.5rem]' : ''}>
+      {localBarVisible && <TopSlideTag onClose={() => setLocalBarVisible(false)} />}
+      <div className={localBarVisible ? 'lg:mt-[2.5rem]' : ''}>
         <div style={{
           transition: 'top 0.3s',
           position: 'fixed',
-          top: showHeader ? (barVisible ? '2.5rem' : 0) : '-4rem',
+          top: showHeader ? (localBarVisible ? '2.5rem' : 0) : '-4rem',
           left: 0,
           width: '100%',
           zIndex: 50
         }}>
-          <Header
-            onMenu={() => setSidebarOpen(true)}
-            onShop={handleShop}
-            onBestseller={handleBestseller}
-            onSale={handleSale}
-            onCountryClick={() => setCountrySidebarOpen(true)}
-            country={selectedCountry}
-            onSearchClick={() => setSearchSidebarOpen(true)}
-            onCartClick={() => setCartSidebarOpen(true)}
-            onProfileClick={handleProfileClick}
-            isNavbarOnWhite={isNavbarOnWhite}
-          />
+          {/* Header */}
+          {/* Remove all code related to the Header/navbar, including state, handlers, and JSX for the header/navbar. Only keep the rest of the Home page content. */}
         </div>
       </div>
       <Sidebar open={sidebarOpen} onClose={() => setSidebarOpen(false)} openSection={openSection} setOpenSection={setOpenSection} />
@@ -1003,7 +963,6 @@ const Home = () => {
       {/* Category Showcase Section */}
       <CategoryShowcase />
       <TestimonialAndFeaturesSection />
-      <Footer />
     </div>
   );
 };
@@ -1357,73 +1316,5 @@ function TestimonialAndFeaturesSection() {
         ))}
       </div>
     </section>
-  );
-} 
-
-function Footer() {
-  return (
-    <footer className="w-full bg-[#181818] text-white pt-16 pb-0 font-sans">
-      <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
-        {/* Categories */}
-        <div>
-          <div className="font-serif text-2xl mb-4">Categories</div>
-          <ul className="space-y-2 text-base">
-            <li>Bath & Body</li>
-            <li>Body Care</li>
-            <li>Face Care</li>
-            <li>Hair Care</li>
-            <li>Hand Care</li>
-            <li>Essential oils</li>
-            <li>Sale %</li>
-          </ul>
-        </div>
-        {/* Customer Service */}
-        <div>
-          <div className="font-serif text-2xl mb-4">Customer Service</div>
-          <ul className="space-y-2 text-base">
-            <li>FAQ</li>
-            <li>Shipping</li>
-            <li>Contact</li>
-          </ul>
-        </div>
-        {/* Information */}
-        <div>
-          <div className="font-serif text-2xl mb-4">Information</div>
-          <ul className="space-y-2 text-base">
-            <li>Return and Refunds</li>
-            <li>Legal Area</li>
-            <li>About us</li>
-          </ul>
-        </div>
-        {/* About Us */}
-        <div>
-          <div className="font-serif text-2xl mb-4">About Us</div>
-          <div className="text-base leading-relaxed mb-2">We could not have created this demo without the help of an amazing source of content and products. Visit our about page to find out where all the products used in this demo care from.</div>
-          <a href="#" className="underline text-sm">More Info</a>
-        </div>
-      </div>
-      {/* Social, country, payment row */}
-      <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between py-6">
-        <div className="flex items-center gap-4 mb-4 md:mb-0">
-          <span className="flex items-center gap-1 text-base"><span className="text-xl">🇺🇸</span> US /USD <svg width="12" height="12" fill="none" viewBox="0 0 20 20" className="inline ml-1"><path d="M6 8l4 4 4-4" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg></span>
-          <span className="mx-2">|</span>
-          <a href="#" className="hover:text-gray-300"><svg width="20" height="20" fill="none" viewBox="0 0 24 24"><path d="M18 2h-3a5 5 0 0 0-5 5v3H6v4h4v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3V2z" stroke="#fff" strokeWidth="2"/></svg></a>
-          <a href="#" className="hover:text-gray-300"><svg width="20" height="20" fill="none" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke="#fff" strokeWidth="2"/><path d="M8 12h8" stroke="#fff" strokeWidth="2"/></svg></a>
-          <a href="#" className="hover:text-gray-300"><svg width="20" height="20" fill="none" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="4" stroke="#fff" strokeWidth="2"/></svg></a>
-          <a href="#" className="hover:text-gray-300"><svg width="20" height="20" fill="none" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke="#fff" strokeWidth="2"/><path d="M8 12h8" stroke="#fff" strokeWidth="2"/></svg></a>
-        </div>
-        <div className="flex items-center gap-2">
-          <img src="https://upload.wikimedia.org/wikipedia/commons/4/41/Visa_Logo.png" alt="Visa" className="h-7 w-auto bg-white rounded px-1" />
-          <img src="https://upload.wikimedia.org/wikipedia/commons/0/04/Mastercard-logo.png" alt="Mastercard" className="h-7 w-auto bg-white rounded px-1" />
-          <img src="https://upload.wikimedia.org/wikipedia/commons/3/30/American_Express_logo_%282018%29.svg" alt="Amex" className="h-7 w-auto bg-white rounded px-1" />
-          <img src="https://upload.wikimedia.org/wikipedia/commons/5/5e/PayPal_2014_logo.png" alt="PayPal" className="h-7 w-auto bg-white rounded px-1" />
-          <img src="https://upload.wikimedia.org/wikipedia/commons/2/2a/Discover_Card_logo.svg" alt="Discover" className="h-7 w-auto bg-white rounded px-1" />
-        </div>
-      </div>
-      {/* Large beauty text */}
-      <div className="w-full text-white text-[clamp(4rem,18vw,16rem)] font-serif font-bold leading-none text-left pl-4 md:pl-16 pb-4 select-none opacity-95" style={{ letterSpacing: '-0.05em' }}>
-        beauty
-      </div>
-    </footer>
   );
 } 

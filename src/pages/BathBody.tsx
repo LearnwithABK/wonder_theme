@@ -1,6 +1,13 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import CategoryShowcase from './CategoryShowcase';
+import ProductCard from '../components/ProductCard';
+
+interface ProductCardProps {
+  name: string;
+  img: string;
+  isNew?: boolean;
+}
 
 // Define the Product type
 interface Product {

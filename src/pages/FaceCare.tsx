@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import ProductCard from '../components/ProductCard';
 
 // Define the Product type
 interface Product {
