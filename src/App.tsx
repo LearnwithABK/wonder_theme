@@ -8,6 +8,8 @@ import HairCare from './pages/HairCare';
 import HandCare from './pages/HandCare';
 import EssentialOils from './pages/EssentialOils';
 import Shop from './pages/Shop';
+import ProductDetail from './pages/ProductDetail';
+import Footer from './components/Footer';
 
 const categoryPaths = [
   '/shop',
@@ -52,7 +54,9 @@ function App() {
         <Route path="/hair-care" element={<HairCare />} />
         <Route path="/hand-care" element={<HandCare />} />
         <Route path="/essential-oils" element={<EssentialOils />} />
+        <Route path="/product/:name" element={<ProductDetail />} />
       </Routes>
+      <Footer />
     </Router>
   );
 }
