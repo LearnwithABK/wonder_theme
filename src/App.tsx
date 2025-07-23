@@ -1,5 +1,5 @@
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Link, useLocation } from 'react-router-dom';
+import React, { useState } from 'react';
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import Home from './Home';
 import FaceCare from './pages/FaceCare';
 import BodyCare from './pages/BodyCare';
@@ -8,6 +8,9 @@ import HairCare from './pages/HairCare';
 import HandCare from './pages/HandCare';
 import EssentialOils from './pages/EssentialOils';
 import Shop from './pages/Shop';
+import MainNavbar from './components/MainNavbar';
+import Footer from './components/Footer';
+import ProductDetail from './pages/ProductDetail';
 
 const categoryPaths = [
   '/shop',
@@ -19,32 +22,18 @@ const categoryPaths = [
   '/essential-oils',
 ];
 
-function AppNavbars() {
+function AppRoutes() {
   const location = useLocation();
-  const showUpper = categoryPaths.includes(location.pathname);
+  const [barVisible, setBarVisible] = useState(true);
+  // Only Home page uses the announcement bar
+  const isHome = location.pathname === '/';
+  // Pass topOffsetPx=40 (2.5rem) if barVisible and on Home, else 0
+  const topOffsetPx = isHome && barVisible ? 40 : 0;
   return (
     <>
-      {showUpper && (
-        <nav className="w-full px-4 py-2 flex gap-3 items-center border-b">
-          <Link to="/shop" className="font-bold text-lg">Shop</Link>
-          <Link to="/face-care">Face Care</Link>
-          <Link to="/body-care">Body Care</Link>
-          <Link to="/bath-body">Bath & Body</Link>
-          <Link to="/hair-care">Hair Care</Link>
-          <Link to="/hand-care">Hand Care</Link>
-          <Link to="/essential-oils">Essential Oils</Link>
-        </nav>
-      )}
-    </>
-  );
-}
-
-function App() {
-  return (
-    <Router>
-      <AppNavbars />
+      <MainNavbar topOffsetPx={topOffsetPx} />
       <Routes>
-        <Route path="/" element={<Home />} />
+        <Route path="/" element={<Home setBarVisible={setBarVisible} />} />
         <Route path="/shop" element={<Shop />} />
         <Route path="/face-care" element={<FaceCare />} />
         <Route path="/body-care" element={<BodyCare />} />
@@ -52,7 +41,17 @@ function App() {
         <Route path="/hair-care" element={<HairCare />} />
         <Route path="/hand-care" element={<HandCare />} />
         <Route path="/essential-oils" element={<EssentialOils />} />
+        <Route path="/product/:slug" element={<ProductDetail />} />
       </Routes>
+      <Footer />
+    </>
+  );
+}
+
+function App() {
+  return (
+    <Router>
+      <AppRoutes />
     </Router>
   );
 }

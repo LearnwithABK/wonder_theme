@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import ProductCard from '../components/ProductCard';
 
 const products = [
   { name: 'Serum', img: 'https://via.placeholder.com/160x220?text=Serum' },
@@ -75,19 +76,10 @@ const FaceCare = () => (
 
     {/* Main Content */}
     <div className="flex px-16 py-8 gap-8">
-      {/* Sidebar/Filter */}
-      <aside className="w-64 bg-[#f8f6f3] rounded-lg p-6 h-fit shadow">
-        <h2 className="font-semibold mb-4">Filters</h2>
-        <div className="text-gray-600">(Sidebar placeholder)</div>
-      </aside>
       {/* Product Grid */}
       <main className="flex-1 grid grid-cols-4 gap-8">
         {products.map((p, i) => (
-          <div key={i} className="bg-white rounded-lg shadow p-4 flex flex-col items-center">
-            <img src={p.img} alt={p.name} className="h-[220px] w-[160px] object-contain mb-4" />
-            <div className="font-medium text-lg">{p.name}</div>
-            <span className="mt-2 text-xs bg-green-100 text-green-700 rounded-full px-2 py-0.5">New</span>
-          </div>
+          <ProductCard key={i} name={p.name} img={p.img} />
         ))}
       </main>
     </div>
